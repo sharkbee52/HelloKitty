@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Kitty 自定义导航站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-pink: #ff77a8;
+            --secondary-pink: #ffafc7;
+            --background-color: #fff6f9;
+            --light-pink: #ffeaf0;
+            --dark-pink: #e84393;
+            --white: #ffffff;
+            --gray: #888;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        body {
+            font-family: 'Poppins', 'Microsoft YaHei', sans-serif;
+            background-color: var(--background-color);
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffafc7' fill-opacity='0.2'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0 30px;
+            position: relative;
+        }
+        
+        .hello-kitty {
+            position: absolute;
+            left: 20px;
+            top: 10px;
+            font-size: 40px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            color: var(--dark-pink);
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-pink), var(--light-pink));
+            border-radius: 2px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--dark-pink);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        button {
+            background: var(--primary-pink);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background: var(--dark-pink);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(232, 67, 147, 0.3);
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .site-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 25px 15px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--light-pink);
+        }
+        
+        .site-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(232, 67, 147, 0.2);
+            border-color: var(--primary-pink);
+        }
+        
+        .site-card::before {
+            content: '❤';
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            font-size: 20px;
+            color: var(--primary-pink);
+        }
+        
+        .site-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--light-pink);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 30px;
+            color: var(--dark-pink);
+            overflow: hidden;
+            border: 2px solid var(--secondary-pink);
+        }
+        
+        .site-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .site-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--dark-pink);
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .site-url {
+            color: var(--gray);
+            font-size: 0.8rem;
+            display: block;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+        
+        .card-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .card-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            padding: 0;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background: var(--primary-pink);
+            color: white;
+            padding: 20px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-pink);
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--secondary-pink);
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            border-color: var(--primary-pink);
+        }
+        
+        .modal-footer {
+            padding: 15px 25px;
+            background: var(--light-pink);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* Kitty Decorative Elements */
+        .kitty-face {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            top: -40px;
+            right: -40px;
+            z-index: -1;
+        }
+        
+        .kitty-face::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #3d3d3d;
+            border-radius: 50%;
+            top: 25px;
+            left: 15px;
+        }
+        
+        .kitty-face::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #3d3d3d;
+            border-radius: 50%;
+            top: 25px;
+            right: 15px;
+        }
+        
+        .bow {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-pink);
+            border-radius: 50%;
+            top: 10px;
+            left: 15px;
+            transform: rotate(45deg);
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .actions {
+                flex-wrap: wrap;
+            }
+            
+            .hello-kitty {
+                position: static;
+                margin: 0 auto 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            
+            .site-card {
+                padding: 15px 10px;
+            }
+        }
+        
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 60px;
+            color: var(--secondary-pink);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="hello-kitty">
+                <i class="fas fa-cat"></i>
+            </div>
+            <h1>Hello Kitty 导航站</h1>
+            <p class="subtitle">自定义您的专属导航站点，添加您最常访问的网站链接！</p>
+            
+            <div class="actions">
+                <button id="addLinkBtn">
+                    <i class="fas fa-plus"></i> 添加新链接
+                </button>
+                <button id="resetBtn">
+                    <i class="fas fa-redo"></i> 恢复默认
+                </button>
+            </div>
+        </header>
+        
+        <div id="sitesContainer" class="grid-container">
+            <!-- Sites will be populated here -->
+        </div>
+    </div>
+    
+    <!-- Modal for Adding/Editing Links -->
+    <div id="linkModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="modalTitle">添加新链接</span>
+                <button id="closeModal" style="background:none;border:none;color:white;font-size:20px;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="linkForm">
+                    <input type="hidden" id="editIndex">
+                    
+                    <div class="form-group">
+                        <label for="linkName">网站名称</label>
+                        <input type="text" id="linkName" placeholder="如：Google" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="linkUrl">网站地址</label>
+                        <input type="url" id="linkUrl" placeholder="如：https://www.google.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="linkIcon">图标URL (或使用默认图标)</label>
+                        <input type="text" id="linkIcon" placeholder="输入图标图片URL">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelBtn" style="background: #aaa;">取消</button>
+                <button id="saveBtn">保存链接</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample default sites (can be customized by user)
+        let sites = [
+            { name: "Google", url: "https://www.google.com", icon: "https://www.google.com/favicon.ico" },
+            { name: "GitHub", url: "https://github.com", icon: "https://github.githubassets.com/favicons/favicon.png" },
+            { name: "Bilibili", url: "https://www.bilibili.com", icon: "https://www.bilibili.com/favicon.ico" },
+            { name: "Wikipedia", url: "https://zh.wikipedia.org", icon: "https://zh.wikipedia.org/static/favicon/wikipedia.ico" },
+            { name: "知乎", url: "https://www.zhihu.com", icon: "https://static.zhihu.com/heifetz/favicon.ico" },
+            { name: "YouTube", url: "https://www.youtube.com", icon: "https://www.youtube.com/s/desktop/6ca585f4/img/favicon_32x32.png" }
+        ];
+        
+        // DOM Elements
+        const sitesContainer = document.getElementById('sitesContainer');
+        const addLinkBtn = document.getElementById('addLinkBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const linkModal = document.getElementById('linkModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const linkForm = document.getElementById('linkForm');
+        const linkName = document.getElementById('linkName');
+        const linkUrl = document.getElementById('linkUrl');
+        const linkIcon = document.getElementById('linkIcon');
+        const editIndex = document.getElementById('editIndex');
+        
+        // Load data from localStorage on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedSites = localStorage.getItem('navigationSites');
+            if (savedSites) {
+                sites = JSON.parse(savedSites);
+            }
+            renderSites();
+        });
+        
+        // Render sites to the page
+        function renderSites() {
+            sitesContainer.innerHTML = '';
+            
+            if (sites.length === 0) {
+                sitesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-heart"></i>
+                        <h3>没有找到导航链接</h3>
+                        <p>点击上面的"添加新链接"按钮开始创建您的自定义导航</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            sites.forEach((site, index) => {
+                const card = document.createElement('div');
+                card.className = 'site-card';
+                card.innerHTML = `
+                    <div class="site-icon">
+                        ${site.icon ? 
+                            `<img src="${site.icon}" alt="${site.name}">` : 
+                            `<i class="fas fa-link"></i>`}
+                    </div>
+                    <span class="site-name">${site.name}</span>
+                    <span class="site-url">${site.url}</span>
+                    <div class="card-actions">
+                        <button class="card-btn edit-btn" data-index="${index}" title="编辑">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                        <button class="card-btn delete-btn" data-index="${index}" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <a class="card-btn" href="${site.url}" target="_blank" title="访问">
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                `;
+                sitesContainer.appendChild(card);
+                
+                // Decorative kitty faces randomly added to some cards
+                if (index % 3 === 0) {
+                    const face = document.createElement('div');
+                    face.className = 'kitty-face';
+                    card.appendChild(face);
+                }
+                
+                // Kitty bow decoration
+                if (index % 5 === 0) {
+                    const bow = document.createElement('div');
+                    bow.className = 'bow';
+                    card.appendChild(bow);
+                }
+            });
+            
+            // Add event listeners to buttons
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const index = btn.getAttribute('data-index');
+                    openEditModal(index);
+                });
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const index = btn.getAttribute('data-index');
+                    deleteSite(index);
+                });
+            });
+        }
+        
+        // Add new link
+        function addNewSite() {
+            const name = linkName.value.trim();
+            const url = linkUrl.value.trim();
+            const icon = linkIcon.value.trim();
+            
+            if (!name || !url) return;
+            
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                alert('请输入有效的网址 (以http://或https://开头)');
+                return;
+            }
+            
+            const index = editIndex.value;
+            if (index !== '') {
+                // Editing existing
+                sites[index] = { name, url, icon };
+            } else {
+                // Adding new
+                sites.push({ name, url, icon });
+            }
+            
+            saveSites();
+            closeLinkModal();
+        }
+        
+        // Delete site
+        function deleteSite(index) {
+            if (confirm('确定要删除这个链接吗？')) {
+                sites.splice(index, 1);
+                saveSites();
+            }
+        }
+        
+        // Save sites to localStorage
+        function saveSites() {
+            localStorage.setItem('navigationSites', JSON.stringify(sites));
+            renderSites();
+        }
+        
+        // Reset to default sites
+        function resetToDefault() {
+            if (confirm('确定要重置为默认导航链接吗？这将移除您的所有自定义设置。')) {
+                const defaultSites = [
+                    { name: "Google", url: "https://www.google.com", icon: "https://www.google.com/favicon.ico" },
+                    { name: "GitHub", url: "https://github.com", icon: "https://github.githubassets.com/favicons/favicon.png" },
+                    { name: "Bilibili", url: "https://www.bilibili.com", icon: "https://www.bilibili.com/favicon.ico" },
+                    { name: "Wikipedia", url: "https://zh.wikipedia.org", icon: "https://zh.wikipedia.org/static/favicon/wikipedia.ico" },
+                    { name: "知乎", url: "https://www.zhihu.com", icon: "https://static.zhihu.com/heifetz/favicon.ico" },
+                    { name: "YouTube", url: "https://www.youtube.com", icon: "https://www.youtube.com/s/desktop/6ca585f4/img/favicon_32x32.png" }
+                ];
+                
+                sites = [...defaultSites];
+                saveSites();
+            }
+        }
+        
+        // Open add new site modal
+        function openAddModal() {
+            modalTitle.textContent = "添加新链接";
+            linkForm.reset();
+            editIndex.value = '';
+            linkModal.classList.add('active');
+        }
+        
+        // Open edit modal
+        function openEditModal(index) {
+            const site = sites[index];
+            linkName.value = site.name;
+            linkUrl.value = site.url;
+            linkIcon.value = site.icon || '';
+            editIndex.value = index;
+            
+            modalTitle.textContent = "编辑链接";
+            linkModal.classList.add('active');
+        }
+        
+        // Close modal
+        function closeLinkModal() {
+            linkModal.classList.remove('active');
+        }
+        
+        // Event Listeners
+        addLinkBtn.addEventListener('click', openAddModal);
+        resetBtn.addEventListener('click', resetToDefault);
+        closeModal.addEventListener('click', closeLinkModal);
+        cancelBtn.addEventListener('click', closeLinkModal);
+        saveBtn.addEventListener('click', addNewSite);
+        
+        // Close modal when clicking outside
+        linkModal.addEventListener('click', (e) => {
+            if (e.target === linkModal) {
+                closeLinkModal();
+            }
+        });
+        
+        // Enable Enter key to submit form
+        linkForm.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                addNewSite();
+            }
+        });
+        
+        // Initialize
+        renderSites();
+    </script>
+</body>
+</html>
